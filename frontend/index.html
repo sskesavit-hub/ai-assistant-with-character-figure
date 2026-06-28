@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 3D Assistant</title>
+    <!-- Telemetry Logging for Debugging -->
+    <script>
+      (function() {
+        function sendLog(type, msg) {
+          fetch('http://localhost:8000/api/logs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: type, message: msg })
+          }).catch(() => {});
+        }
+
+        const originalError = console.error;
+        console.error = function(...args) {
+          sendLog('error', args.map(a => typeof a === 'object' ? String(a) + ' ' + JSON.stringify(a) : String(a)).join(' '));
+          originalError.apply(console, args);
+        };
+
+        const originalLog = console.log;
+        console.log = function(...args) {
+          sendLog('log', args.map(a => typeof a === 'object' ? String(a) + ' ' + JSON.stringify(a) : String(a)).join(' '));
+          originalLog.apply(console, args);
+        };
+
+        window.onerror = function(message, source, lineno, colno, error) {
+          sendLog('window_error', `${message} at ${source}:${lineno}:${colno}`);
+        };
+
+        window.onunhandledrejection = function(event) {
+          sendLog('promise_rejection', String(event.reason));
+        };
+      })();
+    </script>
+    <!-- Google Fonts: Outfit and Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Live2D SDK Cubism runtimes (Hosted Locally) -->
+    <script src="/live2d.min.js"></script>
+    <script src="/live2dcubismcore.min.js"></script>
+    <script src="/pixi.min.js"></script>
+    <script src="/pixi-live2d-display.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

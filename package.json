@@ -1,0 +1,14 @@
+{
+  "name": "ai-3d-assistant-app",
+  "version": "1.0.0",
+  "main": "electron/main.js",
+  "description": "Local AI 3D Assistant with Autonomous System Access",
+  "scripts": {
+    "install:all": "npm install && cd frontend && npm install",
+    "electron:dev": "concurrently \"npm run dev --prefix frontend\" \"electron .\""
+  },
+  "devDependencies": {
+    "electron": "^34.0.0",
+    "concurrently": "^9.0.1"
+  }
+}
